@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Form from './components/Form';
+import uniqid from 'uniqid';
+import Overview from './components/Overview';
 
 class App extends Component {
   constructor(props) {
@@ -8,14 +9,46 @@ class App extends Component {
       tasks: [],
       task: {
         text: '',
+        id: uniqid()
       }
     }
+  }
+
+  handleChange = (e) => {
+    this.setState({
+      task: { text: e.target.value }
+    })
+    console.log(e.target.value);
+  }
+  onSubmitTask = (e) => {
+    e.preventDefault();
+    this.setState({
+      tasks: this.state.tasks.concat(this.state.task),
+      task: {
+        text: '',
+        id: uniqid(),
+      },
+    })
+
   }
   render() {
     const { task, tasks } = this.state;
     return (
       <div className="App" >
-        <Form />
+        <label htmlFor="taskInput">Add Task</label>
+        <form onSubmit={this.onSubmitTask}>
+          <input
+            type="text"
+            placeholder="Task"
+            value={task.text}
+            id="taskInput"
+            onChange={this.handleChange} />
+          <button
+            type="submit">
+            Add task
+            </button>
+        </form>
+        <Overview tasks={tasks} />
       </div>
     );
   }
